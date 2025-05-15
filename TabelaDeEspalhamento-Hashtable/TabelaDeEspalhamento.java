@@ -39,7 +39,9 @@ public class TabelaDeEspalhamento{
         for(int i = 0; i < tabela.length; i++){
             if(tabela[i] != null){
                 s = s + "Origem: " + (i+1) + " Destinos: " + tabela[i].toString() + "\n";
-            }        
+            } else {
+                s = s + "Nó sem destino: " + (i+1);
+            }       
         }
         return s;
     }

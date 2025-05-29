@@ -1,4 +1,4 @@
-public class quickSort{
+public class QuickSort{
     public static void main(String[] args){
         int[] nums = {9, 7, 5, 11, 12, 2, 14, 3, 10, 6};
         quickSort(nums, 0, nums.length-1);
@@ -7,9 +7,8 @@ public class quickSort{
         }
     }
     public static void quickSort(int vet[], int ini, int fim){
-        int divisao;
         if(ini < fim){
-            divisao = separa(vet, ini, fim);
+            int divisao = separa(vet, ini, fim);
             quickSort(vet, ini, divisao-1);
             quickSort(vet, divisao+1, fim);
         }

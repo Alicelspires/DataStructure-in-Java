@@ -1,79 +1,131 @@
 public class Arvore{
     private No raiz;
     
-    public Arvore() {
+    public Arvore(){
         raiz = null;
     }
-
-    public void inserir(int e) {
-        No novo = new No(e);
-        if (raiz == null) {
-            raiz = novo;
-        } else {
-            No aux2 = buscarPai(raiz, raiz, e);
-            if (e == aux2.elemento) {
-                aux2.ocorrencias++;
-                System.out.println("Elemento já existente. Ocorrências: " + aux2.ocorrencias);
+    
+    // Metodos de busca de nos ----------------------------
+    
+    private No buscaPai(No raiz, No raiz2 ,int e){
+        if(raiz != null && e != raiz.elemento){
+            raiz2 = raiz;
+            if(e < raiz.elemento){
+                return buscaPai(raiz.esquerda, raiz2, e);
             } else {
-                if (e < aux2.elemento)
-                    aux2.esquerda = novo;
-                if (e > aux2.elemento)
-                    aux2.direita = novo;
+                return buscaPai(raiz.direita, raiz2, e);
+            }
+        }
+        return raiz2;
+    }
+    
+    private No buscarNo(No no, int valor) {
+        if (no == null) {
+            return null;
+        }
+        
+        if (valor < no.elemento) {
+            return buscarNo(no.esquerda, valor);
+        } else if (valor > no.elemento) {
+            return buscarNo(no.direita, valor);
+        } else {
+            return no; // Nó encontrado
+        }
+    }
+    public String buscar(int valor){
+        No node = buscarNo(raiz, valor);
+        if(node != null){
+            return "Valor encontrado: " + valor;
+        } else {
+            return "Valor não encontrado";
+        }
+    }
+    
+    // Metodos de manipulação de dados -------------------
+    
+    // Inserir nó
+    public void inserir(int e){
+        No novoNo = new No(e);
+        if(raiz == null){
+            this.raiz = novoNo;
+        } else {
+            No aux = buscaPai(raiz, raiz, e);
+            if(e == raiz.elemento){
+                System.out.println("Valor já existente");
+            }
+            if(e < aux.elemento){
+                aux.esquerda = novoNo;
+            } else if(e > aux.elemento) {
+                aux.direita = novoNo;
             }
         }
     }
     
-    private No buscarPai(No aux1, No aux2, int e) {
-        if (aux1 != null && e != aux1.elemento) {
-            aux2 = aux1;
-            if (e > aux1.elemento)
-                return buscarPai(aux1.direita, aux2, e);
-            if (e < aux1.elemento)
-                return buscarPai(aux1.esquerda, aux2, e);
+    // Deletar nó
+    public void deletar(int valor){
+        raiz = deletar(raiz, valor);
+    }
+    private No deletar(No no, int valor){
+        if(no == null) return null;
+    
+        if(valor < no.elemento){
+            no.esquerda = deletar(no.esquerda, valor);
+        } else if(valor > no.elemento){
+            no.direita = deletar(no.direita, valor);
+        } else {
+            if (no.direita == null) {
+                return no.esquerda;
+            }
+            
+            No sucessor = encontrarSucessor(no.direita);
+            no.elemento = sucessor.elemento;
+            no.direita = deletar(no.direita, sucessor.elemento);
         }
-        return aux2;
+    
+        return no;
+    }
+    private No encontrarSucessor(No no) {
+        if(no.direita.esquerda == null) return no;
+        No atual = no;
+        while (atual.esquerda != null) {
+            atual = atual.esquerda;
+        }
+        return atual;
     }
     
-    public int buscarOcorrencias(int e) {
-        No no = buscarNo(raiz, e);
-        return (no != null) ? no.ocorrencias : 0;
+    // Em Ordem -----------------------------------
+    public void emOrdem(){
+        emOrdem(raiz);
     }
-    
-    private No buscarNo(No no, int e) {
-        if (no == null || no.elemento == e)
-            return no;
-        if (e < no.elemento)
-            return buscarNo(no.esquerda, e);
-        else
-            return buscarNo(no.direita, e);
-    }
-    
-    public void exibirEmOrdem() {
-        exibirEmOrdem(raiz);
-    }
-    
-    private void exibirEmOrdem(No no) {
-        if (no != null) {
-            exibirEmOrdem(no.esquerda);
-            System.out.println("Elemento: " + no.elemento + " - Ocorrências: " + no.ocorrencias);
-            exibirEmOrdem(no.direita);
+    private void emOrdem(No no){
+        if(no != null){
+            emOrdem(no.esquerda);
+            System.out.print(no.elemento + " ");
+            emOrdem(no.direita);
         }
     }
     
-    public static void main(String[] args) {
-        Arvore arvore = new Arvore();
-        
-        arvore.inserir(50);
-        arvore.inserir(30);
-        arvore.inserir(70);
-        arvore.inserir(20);
-        arvore.inserir(80);
-        arvore.inserir(50); 
-        
-        System.out.println("\nElementos na árvore:");
-        
-        arvore.exibirEmOrdem();
-        
-        System.out.println("\nOcorrências do número 50: " + arvore.buscarOcorrencias(50));
+    // Em Pré-Ordem --------------------------------
+    public void emPreOrdem(){
+        emPreOrdem(raiz);
+    }
+    private void emPreOrdem(No no){
+        if(no != null){
+            System.out.print(no.elemento + " ");
+            emPreOrdem(no.esquerda);
+            emPreOrdem(no.direita);
+        }
+    }
+    
+    // Em Pos-Ordem --------------------------------
+    public void emPosOrdem(){
+        emPosOrdem(raiz);
+    }
+    private void emPosOrdem(No no){
+        if(no != null){
+            emPosOrdem(no.esquerda);
+            emPosOrdem(no.direita);
+            System.out.print(no.elemento + " ");
+        }
     }
 }

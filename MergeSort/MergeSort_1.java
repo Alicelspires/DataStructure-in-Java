@@ -1,46 +1,61 @@
 public class MergeSort_1{
-    public static void main(String[] args){
-        int[] nums = {5, 2, 9, 1, 5, 6};
-        mergeSort(nums, 0, nums.length-1);
-        for (int num : nums){
+    public static void main(String[] args) {
+        int v[] = {80, 65, 71, 190, 180};
+        mergeSort(v, 0, v.length-1);
+        for(int num : v){
             System.out.print(num + " ");
         }
     }
-    public static void mergeSort(int v[], int ini, int fim){
-        if (ini < fim){
-            int meio = (ini+fim)/2;
-            mergeSort (v,ini, meio);
-            mergeSort (v,meio+1, fim);
-            mescla(v, ini, meio, meio+1,fim);
+    public static void mergeSort(int v[], int start, int end){
+        if(start < end){
+            int middle = (start + end)/2;
+            mergeSort(v, start, middle);            // Divide lado esquerdo do array - Split left side array
+            mergeSort(v, middle+1, end);            // Divide lado direito do array  - Split right side array
+            merge(v, start, middle, middle+1, end); // Começa a mesclar as partes já ordenadas -  Starts to merge the sorted sides
         }
     }
-    public static void mescla(int v[], int iE, int fE, int iD, int fD){
-        int aux[]=new int[fD-iE+1], ini=iE, i=0;
+    public static void merge(int v[], int start, int startEnd, int endStart, int end){
+        // Inicia um array, ajudando a ordenar os lados enquanto os mescla: 
+        // Starts an array that helps sort the sides while merge them: 
 
-        while (iE<=fE && iD<=fD){
-            if (v[iE] < v[iD]){
-                aux[i]=v[iE];
-                iE++;
+        int aux[] = new int[end-start+1]; 
+        int i = 0;
+        int s = start;
+        
+        while(start <= startEnd && endStart <= end){ 
+            /* 
+                Verifica se o array da direita e da esquerda tem ainda
+                valores suficientes para serem comparados um com o outro
+                
+                Checks whether the right and left arrays still have enough values 
+                to compared to each other
+            */
+            
+            if(v[start] < v[endStart]){
+                aux[i] = v[start];
+                start++;
             } else {
-                aux[i]=v[iD];
-                iD++;
+                aux[i] = v[endStart];
+                endStart++;
             }
             i++;
         }
-        while (iE<=fE){
-            aux[i]=v[iE];
-            iE++;
+
+        //Mesclando o que restou to array - Merging what left in the array
+        while(start <= startEnd){
+            aux[i] = v[start];
+            start++;
+            i++;
+        }
+        while(endStart <= end){
+            aux[i] = v[endStart];
+            endStart++;
             i++;
         }
 
-        while (iD<=fD){
-            aux[i]=v[iD];
-            iD++;
-            i++;
-        }
-        i=0;
-        for (int ind=ini; ind<=fD;i++,ind++){
-            v[ind]=aux[i];
+        // Put all of the values together into the original array 
+        for(int j = 0; j <= aux.length-1; j++, s++){
+            v[s] = aux[j];
         }
     }
 }

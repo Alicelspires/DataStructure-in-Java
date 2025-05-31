@@ -52,7 +52,7 @@ public class MergeSort_1{
             endStart++;
             i++;
         }
-
+        // Colocar todos os valores em seu array original
         // Put all of the values together into the original array 
         for(int j = 0; j <= aux.length-1; j++, s++){
             v[s] = aux[j];
